@@ -11,5 +11,9 @@ url="$1"
 down "$url"
 ls -lh
 read -p 'input the title name: ' name
-[ -z "$password" ] && read -sp 'password: ' password
+[ -z "$password" ] && {
+    read -sp 'password: ' password
+    echo
+}
+
 acfun -u ${username} -p ${password} -n "${name}" --pic $(ls | grep .jpg) $(ls | grep -v jpg)
