@@ -179,6 +179,7 @@ func (ac *Acfun) PostCover(filePath string) (string, error) {
 	return fmt.Sprintf("%s/%s", token.URL, data.Key), nil
 }
 
+//文件名不在视频文件后缀内的话接口会报错
 func (ac *Acfun) getVedioToken(filePath string) (*ossTokenJson, error) {
 	fi, err := os.Stat(filePath)
 	if err != nil {
@@ -304,7 +305,7 @@ func (ac *Acfun) getVideoID(uploadInfo *uploadInfo) (int64, error) {
 
 func (ac *Acfun) SubmitVideos(submitInfo *SubmitVedioInfo) error {
 	if len(submitInfo.Videos) == 0 && len(submitInfo.VideoIDs) == 0  {
-		//fmt.Println(submitInfo.Videos, submitInfo.VideoIDs, submitInfo.PicFile)
+		//fmt.Println(submitInfo.Videos, submitInfo.VideoIDs)
 		return errors.New("need a minimum of one video")
 	}
 	type videoInfo struct {
@@ -320,36 +321,45 @@ func (ac *Acfun) SubmitVideos(submitInfo *SubmitVedioInfo) error {
 		partIndex int8
 	)
 	//获取上传但为投稿的视频id
-	VedioPendingList, err := ac.GetVedioPeindings()
-	if err != nil {
-		return err
-	}
-	//上传封面
-	if submitInfo.PicFile != "" {
-		picUrl, err = ac.PostCover(submitInfo.PicFile)
+	if len(submitInfo.VideoIDs) > 0 {
+		VedioPendingList, err := ac.GetVedioPeindings()
 		if err != nil {
-			return fmt.Errorf("post cover %s", err)
+			return err
+		}
+		for _, v := range submitInfo.VideoIDs {
+			flag := false
+			for _, pvedio := range VedioPendingList {
+				if strconv.FormatInt(v, 10) == pvedio.VideoID {
+					flag = true
+					break
+				}
+			}
+			if flag {
+				videoInfos = append(videoInfos, &videoInfo{
+					VideoID: v,
+					Title:     fmt.Sprintf("Part%d", partIndex),
+					IsDeleted: 0,
+				})
+				return nil
+			} else {
+				log.Errorf("video %d is not on the cloud", v)
+			}
 		}
 	}
 
-	for _, v := range submitInfo.VideoIDs {
-		flag := false
-		for _, pvedio := range VedioPendingList {
-			if strconv.FormatInt(v, 10) == pvedio.VideoID {
-				flag = true
-				break
+	//上传封面
+	if submitInfo.PicFile != "" {
+		//图片直链情况
+		if strings.HasPrefix(submitInfo.PicFile, "http"){
+			picUrl = submitInfo.PicFile
+		} else {
+			picUrl, err = ac.PostCover(submitInfo.PicFile)
+			if err != nil {
+				return fmt.Errorf("post cover %s", err)
 			}
 		}
-		if flag {
-			videoInfos = append(videoInfos, &videoInfo{VideoID: v,
-				Title:     fmt.Sprintf("Part%d", partIndex),
-				IsDeleted: 0,
-			})
-			return nil
-		} else {
-			log.Errorf("video %d is not on the cloud", v)
-		}
 	}
+
 	for _, v := range submitInfo.Videos {
 		partIndex++
 		id, err := ac.UploadVedio(v)

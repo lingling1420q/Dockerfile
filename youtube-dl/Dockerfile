@@ -6,6 +6,7 @@ RUN set -xe \
                           ffmpeg \
                           openssl \
                           python3 \
+                          jq \
     && pip3 install youtube-dl
 
 WORKDIR /data

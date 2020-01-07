@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
 [[ "${DEBUG}" == "true" ]] && set -x
+cd /root/data
 down(){
     youtube-dl --write-thumbnail \
     --embed-sub \
@@ -13,7 +14,11 @@ if [ "${#@}" -ge 1 ];then
 fi
 if [ -n "$username" ];then
     ls -lh
-    read -p 'input the title name: ' name
+    if [ -n "$auto" ];then
+        name=$(youtube-dl -f mp4 -o '%(id)s.%(ext)s' --print-json --no-warnings "$url" | jq -r .title)
+    else
+	read -p 'input the title name: ' name
+    fi
     [ -z "$password" ] && {
         read -sp 'password: ' password
         echo
