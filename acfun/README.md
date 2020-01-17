@@ -27,7 +27,7 @@ docker cp temp:/${filename}.jpg $temp_dir/
 docker kill temp
 docker run -ti --rm \
   -e username=xxx \
-  -v $temp_dir:/root  zhangguanzhang/acfun-dota
+  -v $temp_dir:/root/data  zhangguanzhang/acfun-dota
 
 rm -rf $temp_dir
 ```
