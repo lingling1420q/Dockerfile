@@ -7,7 +7,7 @@ ARG VERSION=2.4.7
 
 
 RUN apt-get -y update && \
-    apt-get -y install gnupg2 ca-certificates curl && \
+    apt-get -y install gnupg2 ca-certificates curl jq && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "0x135659e928c12247" && \
     curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- -mariadb-maxscale-version $VERSION && \
     apt-get -y update && \
