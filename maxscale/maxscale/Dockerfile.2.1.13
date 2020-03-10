@@ -3,8 +3,8 @@ FROM ubuntu:16.04
 RUN apt-get -y update && \
     apt-get -y install gnupg2 ca-certificates curl && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "0x135659e928c12247" && \
-    curl -o https://dlm.mariadb.com/257027/MaxScale/2.1.13-debug/ubuntu/dists/xenial/main/binary-amd64/maxscale-devel-2.1.13-1.ubuntu.xenial.x86_64.deb && \
-    curl -o https://dlm.mariadb.com/257026/MaxScale/2.1.13-debug/ubuntu/dists/xenial/main/binary-amd64/maxscale-2.1.13-1.ubuntu.xenial.x86_64.deb && \
+    curl -O https://dlm.mariadb.com/257027/MaxScale/2.1.13-debug/ubuntu/dists/xenial/main/binary-amd64/maxscale-devel-2.1.13-1.ubuntu.xenial.x86_64.deb && \
+    curl -O https://dlm.mariadb.com/257026/MaxScale/2.1.13-debug/ubuntu/dists/xenial/main/binary-amd64/maxscale-2.1.13-1.ubuntu.xenial.x86_64.deb && \
     dpkg -i maxscale-* && \
     rm -f maxscale-*  && \
     rm -rf /var/lib/apt/lists/*
