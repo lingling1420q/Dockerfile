@@ -31,3 +31,7 @@ docker run -ti --rm \
 
 rm -rf $temp_dir
 ```
+ffmpeg -i input.mp4 -vcodec libx264 -crf 20 output.mp4
+2.1G 29
+29 2.0G 726
+29 2.0 867
