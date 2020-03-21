@@ -2,11 +2,16 @@
 set -e
 [[ "${DEBUG}" == "true" ]] && set -x
 cd /root/data
+youtube-dl -F $1
+read -t 7 -p 'select the quality: ' quality
+if [ -z "$quality" ];then
+    quality=bestvideo
+fi
 down(){
     youtube-dl --write-thumbnail \
     --embed-sub \
     --write-sub \
-    -f "bestvideo+bestaudio[ext=m4a]/bestvideo+bestaudio/best" --merge-output-format mp4 -o "a${1#*=}.%(ext)s" $@
+    -f "$quality+bestaudio[ext=m4a]/$quality+bestaudio/best" --merge-output-format mp4 -o "a${1#*=}.%(ext)s" $@
 }
 if [ "${#@}" -ge 1 ];then
   url="$@"
