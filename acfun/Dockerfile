@@ -1,9 +1,9 @@
-FROM golang:1.13.4 as builder
+FROM golang:1.14.1 as builder
 
 WORKDIR $GOPATH/src/acfun
 COPY . $GOPATH/src/acfun
 ENV GO111MODULE=on
-ARG GOPROXY=https://goproxy.cn,https://goproxy.io,https://mirrors.aliyun.com/goproxy/,https://athens.azurefd.net,direct
+ARG GOPROXY=https://goproxy.cn,https://goproxy.io,https://mirrors.aliyun.com/goproxy/,direct
 
 RUN CGO_ENABLED=0 go build -ldflags "-s -w" -o /root/acfun main.go
 
