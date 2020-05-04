@@ -6,6 +6,7 @@
 假设目录为`/root/blog`，目录树大体为下面
 ```
 .
+├── .deploy_git
 ├── data
 │   ├── _config.yml
 │   ├── source
@@ -34,5 +35,6 @@ docker run --rm -ti \
     -v ~/.ssh:/root/.ssh/ \
     -v ~/.gitconfig:/root/.gitconfig \
     -v ~/blog/public:/root/blog/public  \
+    -v ~/blog/.deploy_git:/root/blog/.deploy_git \
     zhangguanzhang/hexo-archer
 ```
