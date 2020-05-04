@@ -9,6 +9,8 @@ if [ -n "$NAME" ];then
     git config --global user.email "$NAME"
 fi
 
+
+count=0
 if [ -d '/tmp/blog' ];then 
     count=`ls /tmp/blog | wc -l`
     if [ "$count" -gt 0 ];then
@@ -17,3 +19,7 @@ if [ -d '/tmp/blog' ];then
 fi
 
 hexo d -g
+
+if [ "$count" -gt 0 ];then
+    \cp /root/blog/db.json /tmp/blog/
+fi
